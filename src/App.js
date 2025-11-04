@@ -18,22 +18,41 @@ const handleD3Data = (event) => {
 
 export function SetupButtons() {
 
+    //original buttons from provided skeleton
     document.getElementById('play').addEventListener('click', () => globalEditor.evaluate());
     document.getElementById('stop').addEventListener('click', () => globalEditor.stop());
-    document.getElementById('process').addEventListener('click', () => {
-        Proc()
-    }
-    )
+    document.getElementById('process').addEventListener('click', () => { Proc() })
     document.getElementById('process_play').addEventListener('click', () => {
         if (globalEditor != null) {
             Proc()
             globalEditor.evaluate()
         }
-    }
-    )
+    })
+
+    // Save & Load buttons
+    document.getElementById('save').addEventListener('click', SaveState);
+    document.getElementById('load').addEventListener('click', () => {
+        document.getElementById('loadSettingsFile').click();
+    });
+
+    // Hidden file input change
+    document.getElementById('loadSettingsFile').addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const settings = JSON.parse(e.target.result);
+                applySettings(settings);
+            } catch (err) {
+                console.error('Invalid settings file:', err);
+                alert('Invalid or corrupted JSON file.');
+            }
+        };
+        reader.readAsText(file);
+    });
 }
-
-
 
 export function ProcAndPlay() {
     if (globalEditor != null && globalEditor.repl.state.started == true) {
@@ -60,6 +79,65 @@ export function ProcessText(match, ...args) {
 
     return replace
 }
+
+export function SaveState() {
+    const currState = {
+        procText: document.getElementById('proc').value,
+        p1State: document.getElementById('flexRadioDefault2').checked ? 'hush' : 'on',
+        editorCode: globalEditor?.getCode?.() || '',
+    }
+
+    // Creates a js 'blob' object that stores the insides of the strudel window 
+    const strudelBlob = new Blob([JSON.stringify(currState, null, 2)], {type: 'application/json'})
+
+    // Makes a url and downloads
+    const url = URL.createObjectURL(strudelBlob)
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'strudel_state_save.json';
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+// Loads strudel_state_save.json
+export function loadSettings() {
+    document.getElementById('loadSettingsFile').addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const loaded = JSON.parse(e.target.result);
+                applySettings(loaded);
+            } catch (err) {
+                console.error('Invalid JSON file:', err);
+                alert('Error loading file. Please make sure it is a valid JSON save.');
+            }
+        };
+        reader.readAsText(file);
+    });
+}
+
+export function applySettings(settings) {
+    if (settings.procText !== undefined) {
+        document.getElementById('proc').value = settings.procText;
+    }
+
+    if (settings.p1State === 'hush') {
+        document.getElementById('flexRadioDefault2').checked = true;
+    } else {
+        document.getElementById('flexRadioDefault1').checked = false;
+    }
+
+    // Reprocess and update editor
+    Proc();
+
+    if (settings.editorCode && globalEditor) {
+        globalEditor.setCode(settings.editorCode);
+    }
+}
+
 
 export default function StrudelDemo() {
 
@@ -120,11 +198,20 @@ return (
                     <div className="col-md-4">
 
                         <nav>
+                            <label>Processing:</label> <br />
                             <button id="process" className="btn btn-outline-primary">Preprocess</button>
                             <button id="process_play" className="btn btn-outline-primary">Proc & Play</button>
-                            <br />
+                            <br /> <br />
+
+                            <label>Playing:</label> <br />
                             <button id="play" className="btn btn-outline-primary">Play</button>
                             <button id="stop" className="btn btn-outline-primary">Stop</button>
+                            <br /> <br />
+
+                            <label>Save & Load:</label> <br />
+                            <button id="save" className="btn btn-outline-primary">Save</button>
+                            <button id="load" className="btn btn-outline-primary">Load</button>
+                            <input type="file" id="loadSettingsFile" accept="application/json" style={{ display: 'none' }} />
                         </nav>
                     </div>
                 </div>
