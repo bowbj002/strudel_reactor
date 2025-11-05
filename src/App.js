@@ -88,7 +88,7 @@ export function SaveState() {
     }
 
     // Creates a js 'blob' object that stores the insides of the strudel window 
-    const strudelBlob = new Blob([JSON.stringify(currState, null, 2)], {type: 'application/json'})
+    const strudelBlob = new Blob([JSON.stringify(currState, null, 2)], { type: 'application/json' })
 
     // Makes a url and downloads
     const url = URL.createObjectURL(strudelBlob)
@@ -141,15 +141,15 @@ export function applySettings(settings) {
 
 export default function StrudelDemo() {
 
-const hasRun = useRef(false);
+    const hasRun = useRef(false);
 
-useEffect(() => {
+    useEffect(() => {
 
-    if (!hasRun.current) {
-        document.addEventListener("d3Data", handleD3Data);
-        console_monkey_patch();
-        hasRun.current = true;
-        //Code copied from example: https://codeberg.org/uzu/strudel/src/branch/main/examples/codemirror-repl
+        if (!hasRun.current) {
+            document.addEventListener("d3Data", handleD3Data);
+            console_monkey_patch();
+            hasRun.current = true;
+            //Code copied from example: https://codeberg.org/uzu/strudel/src/branch/main/examples/codemirror-repl
             //init canvas
             const canvas = document.getElementById('roll');
             canvas.width = canvas.width * 2;
@@ -175,71 +175,79 @@ useEffect(() => {
                     await Promise.all([loadModules, registerSynthSounds(), registerSoundfonts()]);
                 },
             });
-            
-        document.getElementById('proc').value = stranger_tune
-        SetupButtons()
-        Proc()
-    }
 
-}, []);
+            document.getElementById('proc').value = stranger_tune
+            SetupButtons()
+            Proc()
+        }
+
+    }, []);
 
 
-return (
-    <div>
-        <h2>Strudel Demo</h2>
-        <main>
+    return (
+        <div>
+            <h2 className="">Strudel Demo</h2>
+            <main>
 
-            <div className="container-fluid">
-                <div className="row">
-                    <div className="col-md-8" style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-                        <label htmlFor="exampleFormControlTextarea1" className="form-label">Text to preprocess:</label>
-                        <textarea className="form-control" rows="15" id="proc" ></textarea>
-                    </div>
-                    <div className="col-md-4">
+                <div className="container-fluid">
 
-                        <nav>
-                            <label>Processing:</label> <br />
-                            <button id="process" className="btn btn-outline-primary">Preprocess</button>
-                            <button id="process_play" className="btn btn-outline-primary">Proc & Play</button>
-                            <br /> <br />
-
-                            <label>Playing:</label> <br />
-                            <button id="play" className="btn btn-outline-primary">Play</button>
-                            <button id="stop" className="btn btn-outline-primary">Stop</button>
-                            <br /> <br />
-
-                            <label>Save & Load:</label> <br />
-                            <button id="save" className="btn btn-outline-primary">Save</button>
-                            <button id="load" className="btn btn-outline-primary">Load</button>
-                            <input type="file" id="loadSettingsFile" accept="application/json" style={{ display: 'none' }} />
-                        </nav>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-md-8" style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-                        <div id="editor" />
-                        <div id="output" />
-                    </div>
-                    <div className="col-md-4">
-                        <div className="form-check">
-                            <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" onChange={ProcAndPlay} defaultChecked />
-                            <label className="form-check-label" htmlFor="flexRadioDefault1">
-                                p1: ON
-                            </label>
+                    <div className="row">
+                        <div className="col-md-8" style={{ maxHeight: '50vh', overflowY: 'auto' }}>
+                            <label htmlFor="exampleFormControlTextarea1" className="form-label">Text to preprocess:</label>
+                            <textarea className="form-control" rows="15" id="proc" ></textarea>
                         </div>
-                        <div className="form-check">
-                            <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" onChange={ProcAndPlay} />
-                            <label className="form-check-label" htmlFor="flexRadioDefault2">
-                                p1: HUSH
-                            </label>
+
+                        <div className="col-md-4">
+                            <nav>
+                                <label>Processing:</label> <br />
+                                <button id="process" className="btn btn-lg btn-primary m-2 r-2">Preprocess</button>
+                                <button id="process_play" className="btn btn-lg btn-primary">Proc & Play</button>
+                                <br />
+
+                                <label>Playing:</label> <br />
+                                <button id="play" className="btn btn-lg btn-info m-2 r-2">Play</button>
+                                <button id="stop" className="btn btn-lg btn-info m-2 r-2">Stop</button>
+                                <br />
+
+                                <label>Save & Load:</label> <br />
+                                <button id="save" className="btn btn-lg btn-success m-2 r-2">Save</button>
+                                <button id="load" className="btn btn-lg btn-warning m-2 r-2">Load</button>
+                                <input type="file" id="loadSettingsFile" accept="application/json" style={{ display: 'none' }} />
+                            </nav>
                         </div>
                     </div>
+
+
+                    <div className="row">
+                        <div className="col-md-8" style={{ maxHeight: '50vh', overflowY: 'auto' }}>
+                            <div id="editor" />
+                            <div id="output" />
+                        </div>
+                        <div className="col-md-4">
+                            <div className="form-group">
+                                <div className="form-check-inline">
+                                    <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" onChange={ProcAndPlay} defaultChecked />
+                                    <label className="form-check-label" htmlFor="flexRadioDefault1">
+                                        P1: ON
+                                    </label>
+
+                                    <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" onChange={ProcAndPlay} />
+                                    <label className="form-check-label" htmlFor="flexRadioDefault2">
+                                        P1: HUSH
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <canvas id="roll"></canvas>
-        </main >
-    </div >
-);
+
+
+                <canvas id="roll"></canvas>
+
+
+            </main >
+        </div >
+    );
 
 
 }
