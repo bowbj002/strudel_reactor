@@ -55,7 +55,7 @@ export function SetupButtons() {
 }
 
 export function ProcAndPlay() {
-    if (globalEditor != null && globalEditor.repl.state.started == true) {
+    if (globalEditor != null && globalEditor.repl.state.started === true) {
         console.log(globalEditor)
         Proc()
         globalEditor.evaluate();
@@ -65,7 +65,11 @@ export function ProcAndPlay() {
 export function Proc() {
 
     let proc_text = document.getElementById('proc').value
-    let proc_text_replaced = proc_text.replaceAll('<p1_Radio>', ProcessText);
+
+    let proc_text_replaced = proc_text.replaceAll('<p1_Radio>', ProcessText(1));
+    proc_text_replaced = proc_text_replaced.replaceAll('<p2_Radio>', ProcessText(2));
+    proc_text_replaced = proc_text_replaced.replaceAll('<p3_Radio>', ProcessText(3));
+
     ProcessText(proc_text);
     globalEditor.setCode(proc_text_replaced)
 }
@@ -73,7 +77,15 @@ export function Proc() {
 export function ProcessText(match, ...args) {
 
     let replace = ""
-    if (document.getElementById('flexRadioDefault2').checked) {
+    if (match === 1 && document.getElementById('flexRadioInstrument1Off').checked) {
+        replace = "_"
+    }
+
+    if (match === 2 && document.getElementById('flexRadioInstrument2Off').checked) {
+        replace = "_"
+    }
+
+    if (match === 3 && document.getElementById('flexRadioInstrument3Off').checked) {
         replace = "_"
     }
 
@@ -83,7 +95,11 @@ export function ProcessText(match, ...args) {
 export function SaveState() {
     const currState = {
         procText: document.getElementById('proc').value,
-        p1State: document.getElementById('flexRadioDefault2').checked ? 'hush' : 'on',
+
+        p1State: document.getElementById('flexRadioInstrument1Off').checked ? 'hush' : 'on',
+        p2State: document.getElementById('flexRadioInstrument2Off').checked ? 'hush' : 'on',
+        p3State: document.getElementById('flexRadioInstrument3Off').checked ? 'hush' : 'on',
+
         editorCode: globalEditor?.getCode?.() || '',
     }
 
@@ -125,9 +141,27 @@ export function applySettings(settings) {
     }
 
     if (settings.p1State === 'hush') {
-        document.getElementById('flexRadioDefault2').checked = true;
+        document.getElementById('flexRadioInstrument1On').checked = false;
+        document.getElementById('flexRadioInstrument1Off').checked = true;
     } else {
-        document.getElementById('flexRadioDefault1').checked = false;
+        document.getElementById('flexRadioInstrument1Off').checked = false;
+        document.getElementById('flexRadioInstrument1On').checked = true;
+    }
+
+    if (settings.p2State === 'hush') {
+        document.getElementById('flexRadioInstrument2On').checked = false;
+        document.getElementById('flexRadioInstrument2Off').checked = true;
+    } else {
+        document.getElementById('flexRadioInstrument2Off').checked = false;
+        document.getElementById('flexRadioInstrument2On').checked = true;
+    }
+
+    if (settings.p3State === 'hush') {
+        document.getElementById('flexRadioInstrument3On').checked = false;
+        document.getElementById('flexRadioInstrument3Off').checked = true;
+    } else {
+        document.getElementById('flexRadioInstrument3Off').checked = false;
+        document.getElementById('flexRadioInstrument3On').checked = true;
     }
 
     // Reprocess and update editor
@@ -186,7 +220,8 @@ export default function StrudelDemo() {
 
     return (
         <div>
-            <h2 className="">Strudel Demo</h2>
+            <head><title>The Music Machine</title></head>
+            <h2 className="">Strudel Music Maker</h2>
             <main>
 
                 <div className="container-fluid">
@@ -225,15 +260,45 @@ export default function StrudelDemo() {
                         </div>
                         <div className="col-md-4">
                             <div className="form-group">
-                                <div className="form-check-inline">
-                                    <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" onChange={ProcAndPlay} defaultChecked />
-                                    <label className="form-check-label" htmlFor="flexRadioDefault1">
-                                        P1: ON
+                                <p>Instrument 1</p>
+                                <div className="form-check">
+                                    <input className="form-check-input" type="radio" name="flexRadioInstrument1" id="flexRadioInstrument1On" onChange={ProcAndPlay} defaultChecked />
+                                    <label className="form-check-label" htmlFor="flexRadioInstrument1On">
+                                        ON
                                     </label>
+                                </div>
+                                <div className="form-check">
+                                    <input className="form-check-input" type="radio" name="flexRadioInstrument1" id="flexRadioInstrument1Off" onChange={ProcAndPlay} />
+                                    <label className="form-check-label" htmlFor="flexRadioInstrument2Off">
+                                        MUTE
+                                    </label>
+                                </div>
 
-                                    <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" onChange={ProcAndPlay} />
-                                    <label className="form-check-label" htmlFor="flexRadioDefault2">
-                                        P1: HUSH
+                                <p>Instrument 2</p>
+                                <div className="form-check">
+                                    <input className="form-check-input" type="radio" name="flexRadioInstrument2" id="flexRadioInstrument2On" onChange={ProcAndPlay} defaultChecked />
+                                    <label className="form-check-label" htmlFor="flexRadioInstrument2On">
+                                        ON
+                                    </label>
+                                </div>
+                                <div className="form-check">
+                                    <input className="form-check-input" type="radio" name="flexRadioInstrument2" id="flexRadioInstrument2Off" onChange={ProcAndPlay} />
+                                    <label className="form-check-label" htmlFor="flexRadioInstrument2Off">
+                                        MUTE
+                                    </label>
+                                </div>
+
+                                <p>Instrument 3</p>
+                                <div className="form-check">
+                                    <input className="form-check-input" type="radio" name="flexRadioInstrument3" id="flexRadioInstrument3On" onChange={ProcAndPlay} defaultChecked />
+                                    <label className="form-check-label" htmlFor="flexRadioInstrument3On">
+                                        ON
+                                    </label>
+                                </div>
+                                <div className="form-check">
+                                    <input className="form-check-input" type="radio" name="flexRadioInstrument3" id="flexRadioInstrument3Off" onChange={ProcAndPlay} />
+                                    <label className="form-check-label" htmlFor="flexRadioInstrument3Off">
+                                        MUTE
                                     </label>
                                 </div>
                             </div>

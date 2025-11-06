@@ -24,3 +24,4 @@ yarn-error.log*
 *.vsidx
 .vs/ReactAssignment/v17/.suo
 .vs/ReactAssignment/v17/DocumentLayout.json
+.vs/ReactAssignment/v17/DocumentLayout.backup.json
