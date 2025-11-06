@@ -220,15 +220,21 @@ export default function StrudelDemo() {
 
     return (
         <div>
-            <head><title>The Music Machine</title></head>
-            <h2 className="">Strudel Music Maker</h2>
+            <head>
+                <title>The Music Machine</title>
+                <link rel="icon" type="image/svg+xml" href="https://strudel.cc/favicon.ico" />
+            </head>
+
+            <h2 style={{ display: 'inline-block', marginRight: 5 }}>Strudel Music Maker</h2>
+            <a href="https://strudel.cc/workshop/getting-started/" rel="noopener" target="_blank" style={{ marginLeft: 5 }} className="btn btn-small btn-danger">Help!</a>
+
             <main>
 
                 <div className="container-fluid">
 
                     <div className="row">
                         <div className="col-md-8" style={{ maxHeight: '50vh', overflowY: 'auto' }}>
-                            <label htmlFor="exampleFormControlTextarea1" className="form-label">Text to preprocess:</label>
+                            <label htmlFor="exampleFormControlTextarea1" className="form-label">Preprocessed Music:</label>
                             <textarea className="form-control" rows="15" id="proc" ></textarea>
                         </div>
 

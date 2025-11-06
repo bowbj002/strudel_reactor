@@ -7,9 +7,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+    <div>
+        <head>
+            <title>The Music Machine</title>
+            <link rel="icon" type="image/svg+xml" href="https://strudel.cc/favicon.ico" />
+        </head>
+
+        <React.StrictMode>
+            <App />
+        </React.StrictMode>
+    </div>
 );
 
 // If you want to start measuring performance in your app, pass a function
