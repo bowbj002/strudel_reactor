@@ -15,6 +15,7 @@ import { SetupButtons } from './functions/setupButtons';
 import { ToggleDarkMode } from './functions/setupButtons';
 import { PauseToggle } from './functions/PauseToggle';
 import { SaveState } from './functions/saveState';
+import { initD3Graph } from './functions/d3graph'
 
 import { Modal } from 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -27,6 +28,8 @@ let globalEditor = null;
 const handleD3Data = (event) => {
     console.log(event.detail);
 };
+export const logArray = [];
+
 
 function DisplayShortcuts() {
     const modalEl = document.getElementById('shortcutsModal');
@@ -53,6 +56,11 @@ export default function StrudelDemo() {
             document.body.classList.add("dark-mode");
         }
     }, []);
+
+    useEffect(() => {
+        initD3Graph();
+    }, []);
+
 
     useEffect(() => {
         const handleKeyDown = (e) => {
@@ -354,7 +362,7 @@ export default function StrudelDemo() {
                         </div>
                     </div>
                 </div>`;
-
+                <div className="p-3 border rounded bg-light" id="d3Graph"></div>
             </main >
         </div >
     );
