@@ -6,37 +6,39 @@
  * @author Victoria Bowering
  */
 export function Proc(globalEditor) {
+    ProcStart()
     if (!globalEditor) return; // prevent crash
-
     let proc_text = document.getElementById('proc').value;
 
     const phaserIntensity = parseFloat(document.getElementById('phaserSlider').value);
-    if (phaserIntensity > 0) {
-        proc_text = proc_text.replace('<phaser>', `.phaser(${phaserIntensity})`);
-    }
-    else {
-        proc_text = proc_text.replaceAll('<phaser>', ''); // remove effect if 0
-    }
-
+    const cpm = parseInt(document.getElementById('cpmInput').value) || 28;
     const gainLevel = parseFloat(document.getElementById('gainSlider').value);
-    if (gainLevel !== 0) {
-        proc_text = proc_text.replace('<gain>', `.gain(${gainLevel})`);
+
+
+    const PLACEHOLDERS = {
+        phaser: () => phaserIntensity > 0 ? `.phaser(${phaserIntensity})` : "",
+        speed: () => cpm !== 28 ? `.cpm(${cpm})` : "",
+        gain: () => gainLevel !== 0 ? `.gain(${gainLevel})` : "",
+        p1_Radio: () => document.getElementById("flexRadioInstrument1Off").checked ? "_" : "",
+        p2_Radio: () => document.getElementById("flexRadioInstrument2Off").checked ? "_" : "",
+        p3_Radio: () => document.getElementById("flexRadioInstrument3Off").checked ? "_" : "",
+    };
+
+    for (const key in PLACEHOLDERS) {
+        proc_text = proc_text.replaceAll(`<${key}>`, PLACEHOLDERS[key]());
     }
-    else {
-        proc_text = proc_text.replaceAll('<gain>', ''); // remove effect if 0
-    }
 
-
-    ['1', '2', '3'].forEach(i => {
-        const placeholder = `<p${i}_Radio>`;
-        const isMuted = document.getElementById(`flexRadioInstrument${i}Off`).checked;
-        // if there are markers in the code
-        if (proc_text.includes(placeholder)) {
-            proc_text = proc_text.replaceAll(placeholder, isMuted ? '_' : ''); // if muted make "_" else ""
-        }
-    });
-
+    ProcEnd()
     // put text in editor
-   globalEditor.setCode(proc_text)
+    globalEditor.setCode(proc_text)
 
+}
+
+function ProcStart() {
+    const processingBanner = document.getElementById("status");
+    if (processingBanner) processingBanner.style.opacity = 1;
+}
+function ProcEnd() {
+    const processingBanner = document.getElementById("status");
+    if (processingBanner) processingBanner.style.opacity = 0;
 }
