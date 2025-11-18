@@ -13,6 +13,10 @@ import console_monkey_patch/*, { getD3Data }*/ from './console-monkey-patch';
 import { Proc } from './functions/Proc';
 import { SetupButtons } from './functions/setupButtons';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
+
 let globalEditor = null;
 
 const handleD3Data = (event) => {
@@ -86,18 +90,20 @@ export default function StrudelDemo() {
                 <div className="container-fluid">
 
                     <div className="row">
-                        <div className="col-md-8" style={{ maxHeight: '100vh', overflowY: 'auto' }}>
-                            <label htmlFor="exampleFormControlTextarea1" className="form-label">Preprocessed Music:</label>
+                        <div className="col-md-8 p-3 border rounded bg-light" style={{ maxHeight: '100vh', overflowY: 'auto' }}>
+                            <label htmlFor="exampleFormControlTextarea1" className="form-label">Preprocessed Editing:</label>
                             <textarea className="form-control" rows="15" id="proc" ></textarea>
                         </div>
 
-                        <div className="col-md-4">
+                        <div className="col-md-4 p-3 border rounded bg-light">
                             <nav>
                                 <label>Processing:</label> <br />
                                 <button id="process" className="btn btn-lg btn-primary m-2 r-2">Preprocess</button>
                                 <button id="process_play" className="btn btn-lg btn-primary">Proc & Play</button>
                                 <br />
-
+                                <div id="status" style={{ opacity: 0, transition: "opacity 2s" }}>Processing...</div>
+                                
+                                <br />
                                 <label>Playing:</label> <br />
                                 <button id="play" className="btn btn-lg btn-info m-2 r-2">Play</button>
                                 <button id="stop" className="btn btn-lg btn-info m-2 r-2">Stop</button>
@@ -111,56 +117,86 @@ export default function StrudelDemo() {
                         </div>
                     </div>
 
-                    
+
                     <div className="row">
-                        <div className="col-md-8" style={{ overflowY: 'auto' }}>
+                        <div className="col-md-8 p-3 border rounded bg-light" style={{ overflowY: 'auto'}}>
                             <div id="editor" />
                             <div id="output" />
                         </div>
-                        <div className="col-md-4">
+
+                        <div className="col-md-4 -3 border rounded bg-light">
                             <div className="form-group">
-                                <p>Instrument 1</p>
-                                <div className="form-check">
-                                    <input className="form-check-input" type="radio" name="flexRadioInstrument1" id="flexRadioInstrument1On" onChange={ProcAndPlay} defaultChecked />
-                                    <label className="form-check-label" htmlFor="flexRadioInstrument1On">
-                                        ON
-                                    </label>
+                                <div className="accordion" id='muters'>
+                                    <div className="accordion-item">
+                                        <h2 className="accordion-header">
+                                            <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                Instrument #1 (p1)
+                                            </button>
+                                        </h2>
+                                        <div id="collapseOne" className="accordion-collapse collapse show" data-bs-parent="#muters">
+                                            <div className="accordion-body">
+                                                <div className="form-check">
+                                                    <input className="form-check-input" type="radio" name="flexRadioInstrument1" id="flexRadioInstrument1On" onChange={ProcAndPlay} defaultChecked />
+                                                    <label className="form-check-label" htmlFor="flexRadioInstrument1On">
+                                                        ON
+                                                    </label>
+                                                </div>
+                                                <div className="form-check">
+                                                    <input className="form-check-input" type="radio" name="flexRadioInstrument1" id="flexRadioInstrument1Off" onChange={ProcAndPlay} />
+                                                    <label className="form-check-label" htmlFor="flexRadioInstrument2Off">
+                                                        MUTE
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="accordion-item">
+                                        <h2 className="accordion-header">
+                                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                                Instrument #2 (p2)
+                                            </button>
+                                        </h2>
+                                        <div id="collapseTwo" className="accordion-collapse collapse" data-bs-parent="#muters">
+                                            <div className="accordion-body">
+                                                <div className="form-check">
+                                                    <input className="form-check-input" type="radio" name="flexRadioInstrument2" id="flexRadioInstrument2On" onChange={ProcAndPlay} defaultChecked />
+                                                    <label className="form-check-label" htmlFor="flexRadioInstrument2On">
+                                                        ON
+                                                    </label>
+                                                </div>
+                                                <div className="form-check">
+                                                    <input className="form-check-input" type="radio" name="flexRadioInstrument2" id="flexRadioInstrument2Off" onChange={ProcAndPlay} />
+                                                    <label className="form-check-label" htmlFor="flexRadioInstrument2Off">
+                                                        MUTE
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="accordion-item">
+                                        <h2 className="accordion-header">
+                                            <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                                Instrument #3 (p3)
+                                            </button>
+                                        </h2>
+                                        <div id="collapseThree" className="accordion-collapse collapse" data-bs-parent="#muters">
+                                            <div className="accordion-body">
+                                                <div className="form-check">
+                                                    <input className="form-check-input" type="radio" name="flexRadioInstrument3" id="flexRadioInstrument3On" onChange={ProcAndPlay} defaultChecked />
+                                                    <label className="form-check-label" htmlFor="flexRadioInstrument3On">
+                                                        ON
+                                                    </label>
+                                                </div>
+                                                <div className="form-check">
+                                                    <input className="form-check-input" type="radio" name="flexRadioInstrument3" id="flexRadioInstrument3Off" onChange={ProcAndPlay} />
+                                                    <label className="form-check-label" htmlFor="flexRadioInstrument3Off">
+                                                        MUTE
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="form-check">
-                                    <input className="form-check-input" type="radio" name="flexRadioInstrument1" id="flexRadioInstrument1Off" onChange={ProcAndPlay} />
-                                    <label className="form-check-label" htmlFor="flexRadioInstrument2Off">
-                                        MUTE
-                                    </label>
-                                </div>
-
-                                <p>Instrument 2</p>
-                                <div className="form-check">
-                                    <input className="form-check-input" type="radio" name="flexRadioInstrument2" id="flexRadioInstrument2On" onChange={ProcAndPlay} defaultChecked />
-                                    <label className="form-check-label" htmlFor="flexRadioInstrument2On">
-                                        ON
-                                    </label>
-                                </div>
-                                <div className="form-check">
-                                    <input className="form-check-input" type="radio" name="flexRadioInstrument2" id="flexRadioInstrument2Off" onChange={ProcAndPlay} />
-                                    <label className="form-check-label" htmlFor="flexRadioInstrument2Off">
-                                        MUTE
-                                    </label>
-                                </div>
-
-                                <p>Instrument 3</p>
-                                <div className="form-check">
-                                    <input className="form-check-input" type="radio" name="flexRadioInstrument3" id="flexRadioInstrument3On" onChange={ProcAndPlay} defaultChecked />
-                                    <label className="form-check-label" htmlFor="flexRadioInstrument3On">
-                                        ON
-                                    </label>
-                                </div>
-                                <div className="form-check">
-                                    <input className="form-check-input" type="radio" name="flexRadioInstrument3" id="flexRadioInstrument3Off" onChange={ProcAndPlay} />
-                                    <label className="form-check-label" htmlFor="flexRadioInstrument3Off">
-                                        MUTE
-                                    </label>
-                                </div>
-
                                 <br />
 
                                 <div className="form-group">
@@ -182,12 +218,25 @@ export default function StrudelDemo() {
                                     <input
                                         type="range"
                                         className="form-range"
-                                        id="phaserSlider"
+                                        id="gainSlider"
                                         min="-20"
                                         max="20"
                                         step="0.2"
                                         defaultValue={0}
                                         onChange={ProcAndPlay}
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label htmlFor="cpmInput">Song Speed (speed, default 28)</label>
+                                    <input
+                                        type="number"
+                                        className="form-control"
+                                        id="cpmInput"
+                                        min="-100"
+                                        max="100"
+                                        defaultValue={28}
+                                        onChange={ProcAndPlay} // triggers your Proc function
                                     />
                                 </div>
 
