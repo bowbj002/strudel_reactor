@@ -12,9 +12,14 @@ import console_monkey_patch/*, { getD3Data }*/ from './console-monkey-patch';
 
 import { Proc } from './functions/Proc';
 import { SetupButtons } from './functions/setupButtons';
+import { ToggleDarkMode } from './functions/setupButtons';
+import { PauseToggle } from './functions/PauseToggle';
+import { SaveState } from './functions/saveState';
 
+import { Modal } from 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
 
 
 let globalEditor = null;
@@ -23,6 +28,12 @@ const handleD3Data = (event) => {
     console.log(event.detail);
 };
 
+function DisplayShortcuts() {
+    const modalEl = document.getElementById('shortcutsModal');
+    const modal = new Modal(modalEl);
+    modal.show();
+}
+
 export function ProcAndPlay() {
     if (globalEditor != null && globalEditor.repl.state.started === true) {
         console.log(globalEditor);
@@ -30,9 +41,66 @@ export function ProcAndPlay() {
         globalEditor.evaluate();
     }
 }
+
+
 export default function StrudelDemo() {
 
     const hasRun = useRef(false);
+
+    useEffect(() => {
+        const saved = localStorage.getItem("darkmode");
+        if (saved === "true") {
+            document.body.classList.add("dark-mode");
+        }
+    }, []);
+
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.ctrlKey && e.key === "Enter") { // ctrl + enter
+                PauseToggle(globalEditor);
+            }
+            else if (e.ctrlKey && e.key.toLowerCase() === "s") { // ctrl + s
+                e.preventDefault(); // stops default page save
+                SaveState();
+            }
+            else if (e.ctrlKey && e.key.toLowerCase() === "d") { // ctrl + d
+                e.preventDefault(); // stops default bookmark
+                ToggleDarkMode()
+            }
+            else {
+                const gainSlider = document.getElementById("gainSlider");
+                if (gainSlider) {
+                    if (e.key === "[") { // [
+                        gainSlider.value = parseFloat(gainSlider.value) - 0.5;
+                        ProcAndPlay();
+                    } else if (e.key === "]") { // ]
+                        gainSlider.value = parseFloat(gainSlider.value) + 0.5;
+                        ProcAndPlay();
+                    }
+                }
+                const speedSlider = document.getElementById("cpmInput");
+                if (speedSlider) {
+                    if (e.key === "{") { // {}
+                        speedSlider.value = parseFloat(speedSlider.value) - 0.5;
+                        ProcAndPlay();
+                    } else if (e.key === "}") { // }
+                        speedSlider.value = parseFloat(speedSlider.value) + 0.5;
+                        ProcAndPlay();
+                    }
+                }
+            }
+        };
+
+        // Add listener
+        window.addEventListener("keydown", handleKeyDown);
+
+        // Cleanup 
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+        };
+    }, []); // empty array = run once
+
+
 
     useEffect(() => {
 
@@ -82,8 +150,23 @@ export default function StrudelDemo() {
                 <link rel="icon" type="image/svg+xml" href="https://strudel.cc/favicon.ico" />
             </head>
 
-            <h2 style={{ display: 'inline-block', marginRight: 5 }}>Strudel Music Maker</h2>
+            <h2 style={{ display: 'inline-block', marginTop: '10px', marginRight: 5 }}>Strudel Music Maker</h2>
             <a href="https://strudel.cc/workshop/getting-started/" rel="noreferrer noopener" target="_blank" style={{ marginLeft: 5 }} className="btn btn-small btn-danger">Help!</a>
+            <button style={{ opacity: '0' }}></button>
+            <button
+                id="showShortcuts"
+                className="btn btn-secondary"
+                onClick={() => DisplayShortcuts()}>
+                Shortcuts
+            </button>
+            <button style={{ opacity: '0' }}></button>
+            <button
+                id="darkToggle"
+                className="btn btn-secondary"
+                onClick={() => ToggleDarkMode()}>
+                Toggle Dark Mode
+            </button>
+            <p></p>
 
             <main>
 
@@ -102,7 +185,7 @@ export default function StrudelDemo() {
                                 <button id="process_play" className="btn btn-lg btn-primary">Proc & Play</button>
                                 <br />
                                 <div id="status" style={{ opacity: 0, transition: "opacity 2s" }}>Processing...</div>
-                                
+
                                 <br />
                                 <label>Playing:</label> <br />
                                 <button id="play" className="btn btn-lg btn-info m-2 r-2">Play</button>
@@ -119,7 +202,7 @@ export default function StrudelDemo() {
 
 
                     <div className="row">
-                        <div className="col-md-8 p-3 border rounded bg-light" style={{ overflowY: 'auto'}}>
+                        <div className="col-md-8 p-3 border rounded bg-light" style={{ overflowY: 'auto' }}>
                             <div id="editor" />
                             <div id="output" />
                         </div>
@@ -211,6 +294,7 @@ export default function StrudelDemo() {
                                         defaultValue={0}
                                         onChange={ProcAndPlay}
                                     />
+
                                 </div>
 
                                 <div className="form-group">
@@ -231,12 +315,12 @@ export default function StrudelDemo() {
                                     <label htmlFor="cpmInput">Song Speed (speed, default 28)</label>
                                     <input
                                         type="number"
-                                        className="form-control"
+                                        className="form-range"
                                         id="cpmInput"
                                         min="-100"
                                         max="100"
                                         defaultValue={28}
-                                        onChange={ProcAndPlay} // triggers your Proc function
+                                        onChange={ProcAndPlay} // triggers Proc
                                     />
                                 </div>
 
@@ -249,6 +333,27 @@ export default function StrudelDemo() {
 
                 <canvas id="roll"></canvas>
 
+                <div class="modal fade" id="shortcutsModal" tabindex="-1" aria-labelledby="shortcutsModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="shortcutsModalLabel">Keyboard Shortcuts</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <ul>
+                                    <li><strong>Ctrl + Enter:</strong> Play/Pause</li>
+                                    <li><strong>Ctrl + S:</strong> Save .musicmachine.json file</li>
+                                    <li><strong>Ctrl + D:</strong> Toggle Dark Mode</li>
+                                    <li><strong>[ / ]:</strong> Adjust gain</li>
+                                </ul>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
 
             </main >
         </div >

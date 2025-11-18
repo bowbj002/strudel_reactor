@@ -36,3 +36,38 @@
     transform: rotate(360deg);
   }
 }
+
+.dark-mode {
+    background-color: #121212 !important;
+    color: #eee !important;
+}
+
+    .dark-mode textarea,
+    .dark-mode input,
+    .dark-mode .accordion,
+    .dark-mode .accordion-button,
+    .dark-mode .accordion-body {
+        background-color: #1e1e1e !important;
+        color: #eee !important;
+        border-color: #444 !important;
+    }
+
+    .dark-mode .btn {
+        filter: brightness(0.85);
+    }
+
+
+body.dark-mode .bg-light {
+    background-color: #1e1e1e !important; /* force dark background */
+    color: #e0e0e0 !important; /* force text color */
+}
+
+body.dark-mode .border {
+    border-color: #333 !important;
+}
+
+body.dark-mode .p-3.border.rounded {
+    border-color: #ccc !important; /* light gray border */
+    background-color: #333 !important; /* optional: slightly darker background */
+    color: #eee !important; /* optional: light text */
+}
