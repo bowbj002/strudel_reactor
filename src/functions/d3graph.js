@@ -1,7 +1,8 @@
 import * as d3 from "d3";
-import { logArray } from "../console-monkey-patch";
+import console_monkey_patch, { logArray } from "../console-monkey-patch";
 
 export function initD3Graph() {
+    console_monkey_patch();
     const width = 600;
     const height = 200;
     const margin = { top: 20, right: 20, bottom: 20, left: 40 };

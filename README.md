@@ -15,7 +15,7 @@
 
 ## Demonstration Video
 
-- <a href="./Bowbj002_Example_Video_">
+- Located in project folder
 
 ## Usage Notes and Quirks
 
