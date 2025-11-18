@@ -43,3 +43,8 @@ export function SetupButtons(globalEditor) {
         reader.readAsText(file);
     });
 }
+
+export function ToggleDarkMode() {
+    const enabled = document.body.classList.toggle("dark-mode");
+    localStorage.setItem("darkmode", enabled);
+}

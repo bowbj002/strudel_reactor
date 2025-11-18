@@ -23,7 +23,7 @@ export function SaveState(globalEditor) {
     const url = URL.createObjectURL(strudelBlob)
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'strudel_state_save.json';
+    a.download = 'strudel_state_save.musicmachine.json';
     a.click();
     URL.revokeObjectURL(url);
 }
