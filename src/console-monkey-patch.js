@@ -1,5 +1,5 @@
 let originalLog = null;
-const logArray = [];
+export const logArray = [];
 
 
 export default function console_monkey_patch() {

@@ -8,7 +8,7 @@ import { transpiler } from '@strudel/transpiler';
 import { getAudioContext, webaudioOutput, registerSynthSounds } from '@strudel/webaudio';
 import { registerSoundfonts } from '@strudel/soundfonts';
 import { stranger_tune } from './tunes';
-import console_monkey_patch/*, { getD3Data }*/ from './console-monkey-patch';
+import console_monkey_patch from './console-monkey-patch';
 
 import { Proc } from './functions/Proc';
 import { SetupButtons } from './functions/setupButtons';
@@ -28,7 +28,6 @@ let globalEditor = null;
 const handleD3Data = (event) => {
     console.log(event.detail);
 };
-export const logArray = [];
 
 
 function DisplayShortcuts() {
@@ -210,12 +209,12 @@ export default function StrudelDemo() {
 
 
                     <div className="row">
-                        <div className="col-md-8 p-3 border rounded bg-light" style={{ overflowY: 'auto' }}>
+                        <div className="col-md-8 p-3 border rounded bg-light" style={{ maxHeight: '100vh', overflowY: 'auto' }}>
                             <div id="editor" />
                             <div id="output" />
                         </div>
 
-                        <div className="col-md-4 -3 border rounded bg-light">
+                        <div className="col-md-4 p-3 border rounded bg-light">
                             <div className="form-group">
                                 <div className="accordion" id='muters'>
                                     <div className="accordion-item">
@@ -337,6 +336,8 @@ export default function StrudelDemo() {
                         </div>
                     </div>
                 </div>
+                <div style={{ minHeight: '150px' }} className="p-3 border rounded bg-light" id="d3Graph"></div>
+
 
 
                 <canvas id="roll"></canvas>
@@ -362,7 +363,6 @@ export default function StrudelDemo() {
                         </div>
                     </div>
                 </div>`;
-                <div className="p-3 border rounded bg-light" id="d3Graph"></div>
             </main >
         </div >
     );
